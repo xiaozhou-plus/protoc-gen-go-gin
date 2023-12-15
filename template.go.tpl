@@ -25,12 +25,8 @@ type {{$.Name}} struct{
 // Resp 返回值
 type default{{$.Name}}Resp struct {}
 
-func (resp default{{$.Name}}Resp) response(ctx *gin.Context, status, code int, msg string, data interface{}) {
-	ctx.JSON(status, map[string]interface{}{
-		"code": code, 
-		"msg": msg,
-		"data": data,
-	})
+func (resp default{{$.Name}}Resp) response(ctx *gin.Context, status, data any) {
+	ctx.JSON(status, data)
 }
 
 // Error 返回错误信息
@@ -60,18 +56,18 @@ func (resp default{{$.Name}}Resp) Error(ctx *gin.Context, err error) {
 
 	_ = ctx.Error(err)
 
-	resp.response(ctx, status, code, msg, nil)
+	resp.response(ctx, status, nil)
 }
 
 // ParamsError 参数错误
 func (resp default{{$.Name}}Resp) ParamsError (ctx *gin.Context, err error) {
 	_ = ctx.Error(err)
-	resp.response(ctx, 400, 400, "参数错误", nil)
+	resp.response(ctx, 400, nil)
 }
 
 // Success 返回成功信息
-func (resp default{{$.Name}}Resp) Success(ctx *gin.Context, data interface{}) {
-	resp.response(ctx, 200, 0, "成功", data)
+func (resp default{{$.Name}}Resp) Success(ctx *gin.Context, data any) {
+	resp.response(ctx, 200, data)
 }
 
 
